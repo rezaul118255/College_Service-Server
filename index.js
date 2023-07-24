@@ -30,12 +30,7 @@ async function run() {
         const reviewCollection = client.db("CollegeService").collection("reviews");
         const enrollCollection = client.db("CollegeService").collection("enrolled");
 
-        app.post("/enroll", async (req, res) => {
-            const body = req.body;
-            const result = await enrollCollection.insertOne(body)
-            console.log(body)
-            res.send(result)
-        });
+
 
 
 
@@ -43,12 +38,41 @@ async function run() {
             const result = await menuCollection.find().toArray();
             res.send(result);
         })
-        app.get('/menu/:id', (req, res) => {
-            const id = parseInt(req.params.id);
-            console.log(id)
-            const result = menuCollection.find(n => n.id == id)
+        // app.get('/menu/:id', async (req, res) => {
+        //     const id = parseInt(req.params.id);
+        //     console.log(id)
+        //     const result = menuCollection.find(n => n.id === id)
+        //     res.send(result)
+        // })
+
+        app.get("/menu/:id", async (req, res) => {
+            // console.log(req.params.id)
+            const result = await menuCollection.find({ id: req.params.id }).toArray();
             res.send(result)
         })
+        app.get("/college/:id", async (req, res) => {
+            // console.log(req.params.id)
+            const result = await menuCollection.find({ id: req.params.id }).toArray();
+            res.send(result)
+        })
+        app.post("/enroll", async (req, res) => {
+            const body = req.body;
+            const result = await enrollCollection.insertOne(body)
+            console.log(body)
+            res.send(result)
+        });
+
+        app.get('/enrolled', async (req, res) => {
+            const result = await enrollCollection.find().toArray();
+            res.send(result);
+        })
+        app.get("/enrolled/:email", async (req, res) => {
+            console.log(req.params.email)
+            const result = await enrollCollection.find({ postedBy: req.params.email }).toArray();
+            res.send(result)
+        })
+
+
 
         app.get("/getToysByText/:text", async (req, res) => {
             const text = req.params.text;
@@ -61,6 +85,15 @@ async function run() {
                 })
                 .toArray();
             res.send(result);
+        });
+
+
+
+        app.post("/reviews", async (req, res) => {
+            const body = req.body;
+            const result = await reviewCollection.insertOne(body)
+            console.log(body)
+            res.send(result)
         });
 
 
